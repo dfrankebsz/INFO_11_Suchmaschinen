@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0f3d73" />
+  <meta name="description" content="Interaktiver Lernkurs zur Funktionsweise von Suchmaschinen: Crawling, Indexierung, Relevanz, Ranking und SEO." />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <title>SearchQuest · Suchmaschinen</title>
+</head>
+<body data-theme="default">
+  <div id="appShell" class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">🔎</div>
+        <div><strong>SearchQuest</strong><span>Suchmaschinen & SEO</span></div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose" aria-label="Navigation schließen">×</button>
+      <nav id="chapterNav" class="chapter-nav" aria-label="Kapitel"></nav>
+      <div class="sidebar-bottom">
+        <button class="ghost-btn full" id="shopBtn">🛍️ XP-Galerie</button>
+        <button class="ghost-btn full teacher-only hidden" id="teacherBtn">📊 Lehrerbereich</button>
+      </div>
+    </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-btn menu-btn" id="menuBtn" aria-label="Navigation öffnen">☰</button>
+          <div>
+            <div class="breadcrumb" id="breadcrumb">Suchmaschinen</div>
+            <div class="save-state" id="saveState">Gastmodus · lokal gespeichert</div>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <div class="xp-chip" title="Erfahrungspunkte"><span>⚡</span><b id="xpValue">0</b><small>XP</small></div>
+          <div class="level-chip"><span id="levelLabel">Level 1</span><div class="mini-progress"><i id="levelBar"></i></div></div>
+          <button class="profile-button" id="profileBtn" aria-label="Profil und Anmeldung">
+            <span class="pet" id="petDisplay"></span><span class="avatar" id="avatarDisplay">🧑‍💻</span><span class="profile-text" id="profileText">Gast</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="content-wrap">
+        <section class="course-header">
+          <div><span class="eyebrow">Lernkurs</span><h1 id="courseTitle"></h1><p id="courseSubtitle"></p></div>
+          <div class="course-progress-card">
+            <div class="ring" id="progressRing"><span id="progressPercent">0%</span></div>
+            <div><b>Gesamtfortschritt</b><span id="progressText">0 von 56 Pflichtaufgaben</span></div>
+          </div>
+        </section>
+        <section id="courseContent" class="course-content"></section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
+  <div id="confettiHost" class="confetti-host" aria-hidden="true"></div>
+
+  <dialog id="authDialog" class="modal auth-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="authClose" type="button" aria-label="Schließen">×</button>
+      <div class="modal-head"><span class="modal-icon">🔐</span><div><h2>Konto & Fortschritt</h2><p>Mit Anmeldung wird dein Fortschritt geräteübergreifend gespeichert.</p></div></div>
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" data-auth-tab="login">Anmelden</button>
+        <button type="button" class="tab" data-auth-tab="register">Konto anlegen</button>
+      </div>
+      <div id="authForms"></div>
+      <div class="privacy-note">🔒 Nutze einen Nicknamen statt deines echten Namens. Passwörter werden serverseitig gehasht gespeichert.</div>
+    </div>
+  </dialog>
+
+  <dialog id="startDialog" class="modal start-modal">
+    <div class="modal-card start-card">
+      <div class="start-hero"><div class="start-icon">🔎</div><span class="eyebrow">Interaktive Lernmission</span><h2>Wie Suchmaschinen funktionieren</h2><p>Begleite UrbanStep beim Produktlaunch: von Crawling und Indexierung bis Ranking und SEO. Arbeite ohne Anmeldung direkt los oder speichere deinen Fortschritt geräteübergreifend.</p></div>
+      <div class="start-actions">
+        <button class="primary-btn" id="guestStartBtn">Ohne Anmeldung starten</button>
+        <button class="secondary-btn" id="loginStartBtn">Anmelden</button>
+        <button class="secondary-btn" id="registerStartBtn">Konto anlegen</button>
+      </div>
+      <div class="start-features"><span>⚡ XP sammeln</span><span>🎨 Designs freischalten</span><span>🐾 Begleiter sammeln</span><span>☁️ Fortschritt synchronisieren</span></div>
+    </div>
+  </dialog>
+
+  <dialog id="solutionDialog" class="modal small-modal">
+    <div class="modal-card">
+      <div class="modal-head"><span class="modal-icon">💡</span><div><h2>Musterlösung anzeigen?</h2><p>Willst du es vorher noch einmal selbst versuchen?</p></div></div>
+      <div class="modal-actions"><button class="secondary-btn" id="solutionCancel">Noch einmal versuchen</button><button class="primary-btn" id="solutionConfirm">Musterlösung anzeigen</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="shopDialog" class="modal wide-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="shopClose" aria-label="Schließen">×</button>
+      <div class="modal-head"><span class="modal-icon">🛍️</span><div><h2>XP-Galerie</h2><p>Schalte mit deinen gesammelten XP neue Hintergründe, Avatare und Begleiter frei.</p></div></div>
+      <div id="shopGrid" class="shop-grid"></div>
+    </div>
+  </dialog>
+
+  <dialog id="teacherDialog" class="modal teacher-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="teacherClose" aria-label="Schließen">×</button>
+      <div class="modal-head"><span class="modal-icon">📊</span><div><h2>Lehrerbereich</h2><p id="teacherClassLabel">Lernfortschritt der Klasse</p></div></div>
+      <div class="teacher-toolbar"><button class="danger-btn" id="resetAllProgressBtn">Gesamten Klassenfortschritt löschen</button><button class="secondary-btn" id="refreshTeacherBtn">Aktualisieren</button></div>
+      <div id="teacherContent"></div>
+    </div>
+  </dialog>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

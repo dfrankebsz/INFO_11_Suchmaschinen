@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300">
+  <rect width="480" height="300" rx="32" fill="#eef5ff"/>
+  <circle cx="390" cy="58" r="38" fill="#c9e7ff"/>
+  <path d="M160 91c18 11 35 26 57 32 36 10 59 15 89 54l84 26c17 5 28 18 26 35-3 22-21 33-48 33H121c-32 0-52-16-55-37-3-19 10-33 29-39l57-18 8-86z" fill="#164a7b"/>
+  <path d="M75 222h324c8 0 14 6 14 14v8H71v-8c0-8 2-14 4-14z" fill="#62d2a4"/>
+  <path d="M179 118l67 15-19 55-79-12 31-58z" fill="#ffffff" opacity=".95"/>
+  <path d="M265 144l21 50M292 152l21 48" stroke="#9cc7eb" stroke-width="8" stroke-linecap="round"/>
+  <path d="M104 197c6 18 19 27 41 27h187" fill="none" stroke="#8eb6d8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M407 74c0 15-15 28-15 28s-15-13-15-28a15 15 0 1 1 30 0z" fill="#2e8bcb"/>
+  <text x="239" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#164a7b">RAINSTEP ONE</text>
+</svg>

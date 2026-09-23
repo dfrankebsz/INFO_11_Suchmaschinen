@@ -1,0 +1,10 @@
+{
+  "name": "SearchQuest – Suchmaschinen & SEO",
+  "short_name": "SearchQuest",
+  "description": "Interaktiver Lernkurs zu Crawling, Indexierung, Relevanz, Ranking und SEO",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f3d73",
+  "icons": [{"src":"/assets/icon.svg","sizes":"any","type":"image/svg+xml"}]
+}

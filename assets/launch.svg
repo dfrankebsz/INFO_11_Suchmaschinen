@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300">
+  <rect width="480" height="300" rx="30" fill="#eef7f3"/>
+  <path d="M249 47c47 17 84 54 101 101l-73 73c-45-11-79-45-90-90l62-84z" fill="#174d78"/>
+  <circle cx="280" cy="107" r="27" fill="#bde6ff" stroke="#fff" stroke-width="8"/>
+  <path d="M189 146l-51 16-35 47 79-11M284 216l-11 79 47-35 16-51" fill="#62d2a4"/>
+  <path d="M194 209c-29 8-52 29-65 62 31-10 54-29 68-57" fill="#ffb15c"/>
+  <circle cx="83" cy="70" r="7" fill="#63d1a4"/><circle cx="397" cy="65" r="9" fill="#ffb15c"/><circle cx="88" cy="245" r="6" fill="#6aa9d8"/>
+  <text x="240" y="282" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#174d78">SEARCH LAUNCH</text>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "name": "searchquest-suchmaschinen-netlify",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interaktiver Lernkurs zu Suchmaschinen und SEO mit Netlify Functions und Netlify Blobs",
+  "dependencies": {
+    "@netlify/blobs": "11.1.0"
+  }
+}
