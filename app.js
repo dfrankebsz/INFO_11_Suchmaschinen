@@ -185,7 +185,7 @@ function renderTask(t,n){
   </article>`;
 }
 function defaultAnswer(t){
-  if(t.type==='multi')return[];if(t.type==='matching')return{};if(t.type==='order')return t.items.map(x=>x[0]);if(t.type==='rgb')return[128,128,128];if(t.type==='pixel')return Array(t.correct.length).fill(null);return '';
+  if(t.type==='multi')return[];if(t.type==='matching')return{};if(t.type==='order')return t.items.map(x=>x[0]);if(t.type==='rgb')return[128,128,128];if(t.type==='pixel')return Array(t.correct.length).fill(null);if(t.type==='product')return Object.fromEntries((t.fields||[]).map(f=>[f.key,f.kind==='checks'?[]:'']));return '';
 }
 function renderTaskBody(t,a){
   switch(t.type){
@@ -199,6 +199,7 @@ function renderTaskBody(t,a){
     case 'order': return renderOrder(t,a||defaultAnswer(t));
     case 'rgb': return renderRGB(t,a||[128,128,128]);
     case 'pixel': return renderPixel(t,a||defaultAnswer(t));
+    case 'product': return renderProduct(t,a);
     default:return '';
   }
 }
@@ -219,6 +220,27 @@ function renderPixel(t,a){
   const cmap=Object.fromEntries(t.palette.map(([k,c])=>[k,c]));
   return `<div class="pixel-task"><div class="paint-grid">${a.map((v,i)=>`<button type="button" class="paint-cell" data-cell="${i}" style="background:${v?cmap[v]:'#fff'}" aria-label="Pixel ${i+1}"></button>`).join('')}</div><div><div class="palette">${t.palette.map(([k,c,n])=>`<button type="button" class="palette-btn ${selected===k?'selected':''}" data-paint="${k}"><span class="swatch" style="background:${c}"></span>${esc(n)}</button>`).join('')}</div><p style="margin-top:10px;color:var(--muted);font-size:14px">Farbe auswählen und anschließend die Pixel antippen.</p></div></div>`;
 }
+
+function normalizeProductAnswer(t,a){
+  const base=defaultAnswer(t);
+  if(!a||typeof a!=='object'||Array.isArray(a)) return base;
+  for(const f of (t.fields||[])){
+    if(f.kind==='checks') base[f.key]=Array.isArray(a[f.key])?a[f.key]:[];
+    else base[f.key]=typeof a[f.key]==='string'?a[f.key]:'';
+  }
+  return base;
+}
+function renderProduct(t,a){
+  const answer=normalizeProductAnswer(t,a);
+  return `<div class="learning-product-builder"><div class="product-banner"><div><span class="eyebrow">Dein Lernprodukt</span><h4>Search-Launch-Plan · RainStep One</h4><p>Der Plan ist kurz und strukturiert. Deine Eingaben werden wie der übrige Kursfortschritt gespeichert.</p></div><span class="product-icon">📄</span></div>${(t.fields||[]).map(f=>{
+    if(f.kind==='checks'){
+      const vals=answer[f.key]||[];
+      return `<fieldset class="product-field" data-product-field="${esc(f.key)}"><legend>${esc(f.label)}</legend><div class="product-check-grid">${f.options.map(opt=>`<label class="product-check"><input type="checkbox" value="${esc(opt)}" ${vals.includes(opt)?'checked':''}><span>${esc(opt)}</span></label>`).join('')}</div><small>Wähle ${f.min===f.max?`genau ${f.min}`:`mindestens ${f.min}`} Option${f.min===1?'':'en'}.</small></fieldset>`;
+    }
+    if(f.kind==='textarea') return `<label class="product-field"><span>${esc(f.label)}</span><textarea class="product-textarea" data-product-field="${esc(f.key)}" placeholder="${esc(f.placeholder||'')}" maxlength="800">${esc(answer[f.key]||'')}</textarea></label>`;
+    return `<label class="product-field"><span>${esc(f.label)}</span><input class="product-input" data-product-field="${esc(f.key)}" type="text" value="${esc(answer[f.key]||'')}" placeholder="${esc(f.placeholder||'')}" maxlength="180"></label>`;
+  }).join('')}<div class="product-note">💾 Mit Anmeldung wird auch dieses Lernprodukt geräteübergreifend gespeichert. Über <strong>PDF / Drucken</strong> erzeugst du eine saubere A4-Fassung; im Druckdialog kannst du „Als PDF speichern“ wählen.</div></div>`;
+}
 function renderSolution(t){
   const criteria=t.criteria?`<ul class="criteria-list">${t.criteria.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
   return `<div class="solution-box"><strong>💡 Musterlösung</strong><div>${esc(t.solution)}</div>${criteria?`<div style="margin-top:8px"><b>Prüfkriterien:</b>${criteria}</div>`:''}</div>`;
@@ -228,19 +250,26 @@ function renderTaskActions(t,completed){
   if(t.type==='free'){
     return `${completed?'<button type="button" class="success-btn" disabled>✓ Als korrekt markiert</button>':'<button type="button" class="primary-btn save-free-btn">Antwort sichern</button>'}${revealHas(t.id)&&!completed?'<button type="button" class="success-btn self-correct-btn">Passt – als korrekt markieren</button>':''}${solution}`;
   }
+  if(t.type==='product'){
+    return `${completed?'<button type="button" class="success-btn" disabled>✓ Lernprodukt abgeschlossen</button>':'<button type="button" class="primary-btn save-product-btn">Plan sichern</button>'}<button type="button" class="secondary-btn print-product-btn">🖨️ PDF / Drucken</button>${revealHas(t.id)&&!completed?'<button type="button" class="success-btn self-correct-btn">Passt – als erledigt markieren</button>':''}${solution}`;
+  }
   return `${completed?'<button type="button" class="success-btn" disabled>✓ Erledigt</button>':'<button type="button" class="primary-btn check-btn">Antwort prüfen</button>'}${solution}`;
 }
 
 function bindTaskEvents(){
   $$('.task-card').forEach(card=>{
     const t=taskById[card.dataset.task];
-    card.querySelectorAll('input[type=radio]').forEach(el=>el.addEventListener('change',()=>setAnswer(t.id,el.value)));
-    card.querySelectorAll('input[type=checkbox]').forEach(el=>el.addEventListener('change',()=>setAnswer(t.id,[...card.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value))));
-    $('.text-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
-    $('.number-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
-    $('.free-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
-    $('.check-btn',card)?.addEventListener('click',()=>checkTask(t));
-    $('.save-free-btn',card)?.addEventListener('click',()=>saveFree(t));
+    if(t.type==='product'){
+      bindProduct(card,t);
+    }else{
+      card.querySelectorAll('input[type=radio]').forEach(el=>el.addEventListener('change',()=>setAnswer(t.id,el.value)));
+      card.querySelectorAll('input[type=checkbox]').forEach(el=>el.addEventListener('change',()=>setAnswer(t.id,[...card.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value))));
+      $('.text-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
+      $('.number-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
+      $('.free-input',card)?.addEventListener('input',e=>setAnswer(t.id,e.target.value));
+      $('.check-btn',card)?.addEventListener('click',()=>checkTask(t));
+      $('.save-free-btn',card)?.addEventListener('click',()=>saveFree(t));
+    }
     $('.self-correct-btn',card)?.addEventListener('click',()=>completeTask(t));
     $('.solution-btn',card)?.addEventListener('click',()=>requestSolution(t));
     bindMatching(card,t);bindOrder(card,t);bindRGB(card,t);bindPixel(card,t);
@@ -276,6 +305,60 @@ function bindPixel(card,t){
   $$('.palette-btn',card).forEach(b=>b.addEventListener('click',()=>{state.selectedPaint[t.id]=b.dataset.paint;$$('.palette-btn',card).forEach(x=>x.classList.toggle('selected',x===b))}));
   $$('.paint-cell',card).forEach(cell=>cell.addEventListener('click',()=>{const a=[...currentAnswer(t.id,defaultAnswer(t))];a[Number(cell.dataset.cell)]=state.selectedPaint[t.id]||t.palette[0][0];setAnswer(t.id,a);const color=Object.fromEntries(t.palette.map(([k,c])=>[k,c]))[a[Number(cell.dataset.cell)]];cell.style.background=color}));
 }
+function bindProduct(card,t){
+  const answer=()=>normalizeProductAnswer(t,currentAnswer(t.id,defaultAnswer(t)));
+  $$('.product-input,.product-textarea',card).forEach(el=>el.addEventListener('input',()=>{const a=answer();a[el.dataset.productField]=el.value;setAnswer(t.id,a)}));
+  $$('.product-field[data-product-field]',card).forEach(field=>{
+    $$('input[type=checkbox]',field).forEach(cb=>cb.addEventListener('change',()=>{
+      const key=field.dataset.productField;const cfg=t.fields.find(f=>f.key===key);const checked=$$('input[type=checkbox]:checked',field);
+      if(cfg?.max&&checked.length>cfg.max){cb.checked=false;toast(`Bitte höchstens ${cfg.max} Optionen auswählen.`,'warn');return}
+      const a=answer();a[key]=$$('input[type=checkbox]:checked',field).map(x=>x.value);setAnswer(t.id,a);
+    }));
+  });
+  $('.save-product-btn',card)?.addEventListener('click',()=>saveProduct(t));
+  $('.print-product-btn',card)?.addEventListener('click',()=>printProduct(t));
+}
+function productMissing(t,a){
+  const answer=normalizeProductAnswer(t,a);const missing=[];
+  for(const f of (t.fields||[])){
+    if(f.kind==='checks'){
+      const n=(answer[f.key]||[]).length;
+      if(n<(f.min||1)||(f.max&&n>f.max)) missing.push(f.label);
+    }else if(String(answer[f.key]||'').trim().length<(f.minChars||1)) missing.push(f.label);
+  }
+  return missing;
+}
+function productInvalid(t,a){
+  const answer=normalizeProductAnswer(t,a);const invalid=[];
+  for(const f of (t.fields||[])) if(f.kind==='checks'&&Array.isArray(f.valid)){
+    const bad=(answer[f.key]||[]).filter(x=>!f.valid.includes(x));
+    if(bad.length) invalid.push(f.label);
+  }
+  return invalid;
+}
+function saveProduct(t){
+  const a=normalizeProductAnswer(t,currentAnswer(t.id,defaultAnswer(t)));setAnswer(t.id,a);
+  const missing=productMissing(t,a);
+  if(missing.length){state.lastFeedback[t.id]={type:'bad',html:`Der Plan ist noch nicht vollständig. Prüfe: ${missing.map(esc).join(' · ')}`};rerenderKeepScroll();return}
+  const invalid=productInvalid(t,a);
+  if(invalid.length){state.lastFeedback[t.id]={type:'bad',html:`Mindestens eine ausgewählte Maßnahme passt fachlich nicht zum Search-Launch. Prüfe noch einmal: ${invalid.map(esc).join(' · ')}`};rerenderKeepScroll();return}
+  state.lastFeedback[t.id]={type:'neutral',html:'Plan vollständig gespeichert. Die auswählbaren Maßnahmen sind fachlich stimmig. Vergleiche deine offene Begründung bei Bedarf mit dem Beispielplan und markiere das Lernprodukt anschließend selbst als erledigt.'};persistProgress();rerenderKeepScroll();
+}
+function printProduct(t){
+  const a=normalizeProductAnswer(t,currentAnswer(t.id,defaultAnswer(t)));const missing=productMissing(t,a);const invalid=productInvalid(t,a);
+  if(missing.length){toast('Fülle den Search-Launch-Plan zuerst vollständig aus.','warn');return}
+  if(invalid.length){toast('Prüfe zuerst deine ausgewählten Maßnahmen.','warn');return}
+  let sheet=$('#printSheet');
+  if(!sheet){sheet=document.createElement('section');sheet.id='printSheet';sheet.className='print-sheet';document.body.append(sheet)}
+  const list=(key)=>`<ul>${(a[key]||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+  const owner=state.user?`${esc(state.user.nickname)} · Klasse ${esc(state.user.className)}`:'Gastmodus';
+  sheet.innerHTML=`<div class="print-brand">SearchQuest · Lernprodukt</div><h1>Search-Launch-Plan · RainStep One</h1><p class="print-meta">${owner}</p><div class="print-case">UrbanStep möchte den neuen wasserdichten Sneaker organisch auffindbar machen. Dieser Plan bündelt die wichtigsten Maßnahmen entlang des Suchmaschinenprozesses.</div><h2>1 · Ziel-Suchanfrage</h2><p>${esc(a.query)}</p><div class="print-two"><div><h2>2 · Crawling</h2>${list('crawl')}</div><div><h2>3 · Indexierung</h2>${list('index')}</div></div><h2>4 · Ranking / SEO</h2>${list('ranking')}<h2>5 · Begründung</h2><p>${esc(a.reason).replace(/\n/g,'<br>')}</p><div class="print-footer"><b>Prozess:</b> Produktseite → Crawling → Indexierung → Suchanfrage → Relevanz/Ranking</div>`;
+  document.body.classList.add('printing-product');
+  const cleanup=()=>document.body.classList.remove('printing-product');
+  window.addEventListener('afterprint',cleanup,{once:true});
+  setTimeout(()=>{window.print();setTimeout(cleanup,1200)},60);
+}
+
 function rerenderKeepScroll(){const y=scrollY;renderSection();requestAnimationFrame(()=>scrollTo(0,y))}
 
 function equalArrays(a,b){return a.length===b.length&&a.every((x,i)=>x===b[i])}

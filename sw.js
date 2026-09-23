@@ -1,4 +1,4 @@
-const CACHE = 'searchquest-v1';
+const CACHE = 'searchquest-v2';
 const CORE = ['/', '/index.html', '/styles.css', '/app.js', '/course-data.js', '/assets/icon.svg', '/assets/rainstep.svg', '/assets/index-card.svg', '/assets/launch.svg', '/manifest.webmanifest'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(

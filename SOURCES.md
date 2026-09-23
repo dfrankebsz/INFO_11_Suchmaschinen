@@ -17,6 +17,29 @@ Die folgenden Quellen sind im Lernkurs direkt verlinkt. Sie dienen zur fachliche
 - Google Search Central – Canonicalization  
   https://developers.google.com/search/docs/crawling-indexing/canonicalization?hl=de
 
+
+## Sitemaps und Indexierung
+
+- Google Search Central – Sitemap erstellen und einreichen (mit XML-Beispiel)  
+  https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=de
+- Apple – echte XML-Sitemap  
+  https://www.apple.com/sitemap.xml
+- Google Search Central – Indexierung mit `noindex` verhindern  
+  https://developers.google.com/search/docs/crawling-indexing/block-indexing
+- Google Search Central – Soft-404- und Crawling-Fehler  
+  https://developers.google.com/search/docs/crawling-indexing/troubleshoot-crawling-errors?hl=de
+- Google Search Central – Crawling-/Indexierungs-FAQ  
+  https://developers.google.com/search/help/crawling-index-faq?hl=de
+
+## Ranking-Faktoren / öffentlich beschriebene Signale
+
+- Google Suche-Hilfe – Relevanz, Nutzerfreundlichkeit, Expertise, Standort/Einstellungen und queryabhängige Gewichtung  
+  https://support.google.com/websearch/answer/7585859?hl=de
+- Google Search Central – Ranking-Systeme, Freshness und Linkanalyse/PageRank  
+  https://developers.google.com/search/docs/appearance/ranking-systems-guide
+- Google Search Central – Page Experience  
+  https://developers.google.com/search/docs/appearance/page-experience
+
 ## Strukturierte Produktdaten
 
 - Google Search Central – Product Snippet / Product Structured Data  

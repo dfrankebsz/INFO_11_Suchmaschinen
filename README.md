@@ -5,16 +5,16 @@ Interaktiver, responsiver Lernkurs für eine 11. Klasse am beruflichen Gymnasium
 ## Inhalt
 
 - Crawling und Googlebot
-- Links und Sitemaps
+- Links und Sitemaps inklusive XML-Beispiel und verlinkter realer Sitemap
 - kurze Abgrenzung Web-Crawling ↔ Web-Scraping
 - Indexierung und Suchmaschinenindex
 - reale Produktseite als Analysebeispiel (IKEA KALLAX)
 - Suchanfragen, Suchabsicht und Relevanz
-- Ranking und Ranking-Signale
+- Ranking mit sieben prüfbaren Signalkategorien und Fallbeispielen
 - SEO-Best-Practices
 - strukturierte Produktdaten
 - reale SEO-Fallstudien von Saramin, Monster India und Rakuten Recipe
-- Abschlussmission: Search-Launch-Plan für UrbanStep
+- Abschlussmission: direkt im Kurs ausfüllbarer Search-Launch-Plan für UrbanStep mit Druck-/PDF-Ausgabe
 
 Der Kurs enthält **56 Pflichtaufgaben plus 7 Bonusaufgaben**. Pro Kapitel gibt es Aufgaben zum Wiedergeben, Anwenden und Beurteilen/Transfer. Diese Kategorien werden im Kurs selbst bewusst nicht als AFB ausgewiesen.
 
@@ -29,6 +29,7 @@ Enthalten sind u. a.:
 - Reihenfolgen/Sortieraufgaben
 - kurze Texteingaben
 - längere Freitextaufgaben mit Selbstkontrolle
+- kompaktes finales Lernprodukt mit strukturierten Auswahlfeldern und PDF-/Druckausgabe
 - Musterlösungen mit vorgeschalteter „Noch einmal versuchen?“-Abfrage
 
 ## Gamification
